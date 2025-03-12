@@ -29,6 +29,10 @@ class Auth0AuthTMFPackageServiceProvider extends ServiceProvider
             __DIR__ . '/../config/Auth0AuthTMFMiddleware.php' => config_path('Auth0AuthTMFMiddleware.php'),
         ]);
 
+        $this->publishesMigrations([
+            __DIR__.'/../database/migrations' => database_path('migrations'),
+        ]);
+
         Log::debug('config', ['domain' => config('Auth0AuthTMFMiddleware.domain')]);
 
     }
