@@ -47,7 +47,7 @@ class Auth0Service
         }
 
         // @Todo validate requesters ip address
-        $requestersIp = request()->header('X-Forwarded-For');
+        $requestersIp = request()->header('X-Forwarded-For') ?? $request->ip();
         $validIpAddresses = $auth0Model->ipAddresses->pluck('ip_address')->all();
         if( !in_array($requestersIp, $validIpAddresses) ){
             $this->logger->debug("Auth Failed request from invalid ip: ".$requestersIp." Ip not in whitelist for BuyerId: ".$buyerId, $validIpAddresses);
