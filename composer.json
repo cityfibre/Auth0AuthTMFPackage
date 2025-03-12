@@ -1,0 +1,40 @@
+{
+    "name": "cityfibre/auth0authtmfpackage",
+    "description": "Laravel Package for Using Auth0 Authentication in the middleware",
+    "type": "library",
+    "authors": [
+        {
+            "name": "willfCF"
+        }
+    ],
+    "repositories": [
+        {
+            "url": "https://github.com/willfd/Auth0MiddleWarePackage",
+            "type": "git"
+        }
+    ],
+    "require": {
+        "laravel/framework": "^11.40",
+        "auth0/auth0-php": "^8.13"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "mockery/mockery": "^1.6",
+        "willfd/auth0middlewarepackage": "dev-main"
+    },
+    "autoload": {
+        "psr-4": {
+            "cityfibre\\auth0authtmfpackage\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": false
+        }
+    }
+}
