@@ -13,6 +13,11 @@ class Auth0Repository
 
     public function getByBuyerId(string $buyerId): ?Auth0
     {
-        return $this->model->where('buyer_id', $buyerId)->first();
+        return $this->model->query()->where('buyer_id', $buyerId)->first();
+    }
+
+    public function createUpdate(array $attributes, array $values): Auth0
+    {
+        return $this->model->query()->updateOrCreate($attributes, $values);
     }
 }

@@ -3,6 +3,9 @@
 namespace cityfibre\auth0authtmfpackage\Services;
 
 use cityfibre\auth0authtmfpackage\Exceptions\Auth0DataException;
+use cityfibre\auth0authtmfpackage\Models\Auth0;
+use cityfibre\auth0authtmfpackage\Models\Auth0IP;
+use cityfibre\auth0authtmfpackage\Repositories\Auth0IPRepository;
 use cityfibre\auth0authtmfpackage\Repositories\Auth0Repository;
 use Illuminate\Http\Request;
 use Psr\Log\LoggerInterface;
@@ -10,7 +13,7 @@ use willfd\auth0middlewarepackage\Exceptions\AuthenticationException;
 
 class Auth0Service
 {
-    public function __construct(protected LoggerInterface $logger, protected Auth0Repository $auth0Repository){
+    public function __construct(protected LoggerInterface $logger, protected Auth0Repository $auth0Repository, protected Auth0IPRepository $auth0IPRepository){
         //
     }
 
@@ -29,7 +32,7 @@ class Auth0Service
             $buyerId = $this->getBuyerFromRequest($request);
         }
         // @Todo get Auth0Model from buyerId
-        $auth0Model = $this->auth0Repository->getbyBuyerid($buyerId);
+        $auth0Model = $this->auth0Repository->getByBuyerId($buyerId);
 
         if( is_null($auth0Model) ){
             $this->logger->debug("No Auth0 Data for given BuyerId: ".$buyerId);
@@ -55,6 +58,42 @@ class Auth0Service
         }
 
         return $request;
+    }
+
+    /**
+     * @param string $buyerId
+     * @param bool $auth0Enabled
+     * @param bool $isActive
+     * @param array<string> $ipAddresses
+     * @return Auth0
+     */
+
+    public function createUpdateAuth0Model(string $buyerId, bool $auth0Enabled, bool $isActive, array $ipAddresses): Auth0
+    {
+        $auth0Model = $this->auth0Repository->createUpdate(
+            ['buyer_id' => $buyerId],
+            [
+                'buyer_id' => $buyerId,
+                'auth_0_enabled' => $auth0Enabled,
+                'is_active' => $isActive,
+            ]
+        );
+
+        // remove unwanted ip addresses
+        $currentIpAddresses = $auth0Model->ipAddresses;
+        $currentIpAddresses->each(function(Auth0IP $ipAddress) use ($ipAddresses) {
+            if( !in_array($ipAddress->ip_address, $ipAddresses) ){
+                $ipAddress->delete();
+            }
+        });
+
+        // add missing ip addresses
+        foreach($ipAddresses as $newIPAddress){
+            if( !in_array($newIPAddress, $currentIpAddresses->pluck('ip_address')->all())){
+                $this->auth0IPRepository->create($buyerId, $newIPAddress);
+            }
+        }
+        return $auth0Model->refresh();
     }
 
     public function getBuyerFromRequest(Request $request): string
