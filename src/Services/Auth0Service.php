@@ -47,6 +47,7 @@ class Auth0Service
         }
 
         // @Todo validate requesters ip address
+        $this->logger->debug("Auth0Models IP Addresses", $auth0Model->ipAddresses->all() );
 
         return $request;
     }
