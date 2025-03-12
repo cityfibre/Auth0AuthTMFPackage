@@ -32,19 +32,22 @@ class Auth0Service
         $auth0Model = $this->auth0Repository->getbyBuyerid($buyerId);
 
         if( is_null($auth0Model) ){
+            $this->logger->debug("No Auth0 Data for given BuyerId: ".$buyerId);
             throw new Auth0DataException("No Auth0 Data for given BuyerId: ".$buyerId);
         }
         // @Todo check if auth0 enabled for model
         if( !$auth0Model->auth_0_enabled ){
+            $this->logger->debug("Auth0 Disabled for given BuyerId: ".$buyerId);
             throw new AuthenticationException("Auth0 Disabled for given BuyerId: ".$buyerId);
         }
         // @todo check if model active
         if( !$auth0Model->is_active ){
+            $this->logger->debug("BuyerId: ".$buyerId. " is not active");
             throw new AuthenticationException("BuyerId: ".$buyerId. " is not active");
         }
 
         // @Todo validate requesters ip address
-        
+
         return $request;
     }
 
