@@ -5,6 +5,8 @@ namespace cityfibre\auth0authtmfpackage;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use cityfibre\auth0authtmfpackage\Http\Middleware\Auth0AuthenticateTMFMiddleware;
 use cityfibre\auth0authtmfpackage\Models\Auth0;
+use cityfibre\auth0authtmfpackage\Models\Auth0IP;
+use cityfibre\auth0authtmfpackage\Repositories\Auth0IPRepository;
 use cityfibre\auth0authtmfpackage\Repositories\Auth0Repository;
 use cityfibre\auth0authtmfpackage\Services\Auth0Service;
 use Exception;
@@ -49,7 +51,7 @@ class Auth0AuthTMFPackageServiceProvider extends ServiceProvider
 
         $this->app->singleton(Auth0AuthenticateTMFMiddleware::class, function ($app) use ($sdkConfig) {
             return new Auth0AuthenticateTMFMiddleware(
-                new Auth0Service( app('log'), new Auth0Repository( new Auth0()) ),
+                new Auth0Service( app('log'), new Auth0Repository( new Auth0()), new Auth0IPRepository( new Auth0IP()) ),
                 new AuthenticationService( app('log') ),
                 config('Auth0AuthTMFMiddleware.adminScopes'),
                 $sdkConfig,
