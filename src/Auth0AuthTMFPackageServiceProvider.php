@@ -40,6 +40,7 @@ class Auth0AuthTMFPackageServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/Auth0AuthTMFMiddleware.php', 'Auth0AuthTMFMiddleware');
 
+        Log::debug('config', ['domain' => config('Auth0TMFAuthenticateMiddleware.domain')] );
         $sdkConfig = $this->setUpSDKConfiguration();
 
         $this->app->singleton(Auth0AuthenticateTMFMiddleware::class, function ($app) use ($sdkConfig) {
