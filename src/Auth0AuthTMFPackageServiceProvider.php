@@ -26,7 +26,7 @@ class Auth0AuthTMFPackageServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/Auth0TMFAuthenticateMiddleware.php' => config_path('Auth0TMFAuthenticateMiddleware.php'),
+            __DIR__ . '/../config/Auth0AuthTMFMiddleware.php' => config_path('Auth0AuthTMFMiddleware.php'),
         ]);
 
         Log::debug('config', ['domain' => config('Auth0TMFAuthenticateMiddleware.domain')]);
@@ -38,7 +38,7 @@ class Auth0AuthTMFPackageServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/Auth0AuthTMFMiddleware.php', 'Auth0TMFAuthenticateMiddleware');
+        $this->mergeConfigFrom(__DIR__ . '/../config/Auth0AuthTMFMiddleware.php', 'Auth0AuthTMFMiddleware');
 
         $sdkConfig = $this->setUpSDKConfiguration();
 
@@ -56,24 +56,24 @@ class Auth0AuthTMFPackageServiceProvider extends ServiceProvider
     protected function setUpSDKConfiguration(): ?SdkConfiguration
     {
         try {
-            $domain = config('Auth0TMFAuthenticateMiddleware.domain');
+            $domain = config('Auth0AuthTMFMiddleware.domain');
             if ($domain == '') {
-                throw new Exception("Auth0TMFAuthenticateMiddleware ERROR: Domain not set");
+                throw new Exception("Auth0AuthTMFMiddleware ERROR: Domain not set");
             }
 
-            $clientId = config('Auth0TMFAuthenticateMiddleware.clientId');
+            $clientId = config('Auth0AuthTMFMiddleware.clientId');
             if ($clientId == '') {
-                throw new Exception("Auth0TMFAuthenticateMiddleware ERROR: Client Id not set");
+                throw new Exception("Auth0AuthTMFMiddleware ERROR: Client Id not set");
             }
 
-            $cookieSecret = config('Auth0TMFAuthenticateMiddleware.cookieSecret');
+            $cookieSecret = config('Auth0AuthTMFMiddleware.cookieSecret');
             if ($cookieSecret == '') {
-                throw new Exception("Auth0TMFAuthenticateMiddleware ERROR: Client Secret not set");
+                throw new Exception("Auth0AuthTMFMiddleware ERROR: Client Secret not set");
             }
 
-            $audience = config('Auth0TMFAuthenticateMiddleware.audience');
+            $audience = config('Auth0AuthTMFMiddleware.audience');
             if ($audience == ['']) {
-                throw new Exception("Auth0TMFAuthenticateMiddleware ERROR: Audience not set");
+                throw new Exception("Auth0AuthTMFMiddleware ERROR: Audience not set");
             }
 
             return new SdkConfiguration([
