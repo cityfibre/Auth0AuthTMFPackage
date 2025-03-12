@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a733adfcb6afebe2e04222e6d28e5eda",
+    "content-hash": "bc4f66faa46410dd9bbede43112367e2",
     "packages": [
         {
             "name": "auth0/auth0-php",
@@ -1236,16 +1236,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v11.44.1",
+            "version": "v11.44.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "0883d4175f4e2b5c299e7087ad3c74f2ce195c6d"
+                "reference": "f85216c82cbd38b66d67ebd20ea762cb3751a4b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/0883d4175f4e2b5c299e7087ad3c74f2ce195c6d",
-                "reference": "0883d4175f4e2b5c299e7087ad3c74f2ce195c6d",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/f85216c82cbd38b66d67ebd20ea762cb3751a4b4",
+                "reference": "f85216c82cbd38b66d67ebd20ea762cb3751a4b4",
                 "shasum": ""
             },
             "require": {
@@ -1447,7 +1447,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-03-05T15:34:10+00:00"
+            "time": "2025-03-12T14:34:30+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -6535,6 +6535,42 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.11.0"
             },
             "time": "2022-06-03T18:03:27+00:00"
+        },
+        {
+            "name": "willfd/auth0middlewarepackage",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/willfd/Auth0MiddleWarePackage",
+                "reference": "c089b95150052cbf36b2cc847613cc967e8b4c6d"
+            },
+            "require": {
+                "auth0/auth0-php": "^8.13",
+                "laravel/framework": "^11.40"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.6",
+                "phpunit/phpunit": "^10.5"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "willfd\\auth0middlewarepackage\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "willfd"
+                }
+            ],
+            "description": "Laravel Package for Using Auth0 Authentication in the middleware",
+            "time": "2025-03-12T14:26:17+00:00"
         }
     ],
     "packages-dev": [
@@ -8295,42 +8331,6 @@
                 }
             ],
             "time": "2024-03-03T12:36:25+00:00"
-        },
-        {
-            "name": "willfd/auth0middlewarepackage",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/willfd/Auth0MiddleWarePackage",
-                "reference": "d7b35e8a82eca24403fea471577999d5e0a631df"
-            },
-            "require": {
-                "auth0/auth0-php": "^8.13",
-                "laravel/framework": "^11.40"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.6",
-                "phpunit/phpunit": "^10.5"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "willfd\\auth0middlewarepackage\\": "src"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Tests\\": "tests/"
-                }
-            },
-            "authors": [
-                {
-                    "name": "willfd"
-                }
-            ],
-            "description": "Laravel Package for Using Auth0 Authentication in the middleware",
-            "time": "2025-03-12T12:19:31+00:00"
         }
     ],
     "aliases": [],
