@@ -4,9 +4,8 @@ namespace cityfibre\auth0authtmfpackage\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Auth0 extends Model
+class Auth0IP extends Model
 {
     use HasFactory;
 
@@ -15,7 +14,7 @@ class Auth0 extends Model
      *
      * @var string
      */
-    protected $table = 'auth0';
+    protected $table = 'auth0_ip_whitelist';
 
     /**
      * The attributes that are mass assignable.
@@ -24,8 +23,7 @@ class Auth0 extends Model
      */
     protected $fillable = [
         'buyer_id',
-        'auth_0_enabled',
-        'is_active'
+        'ip_address'
     ];
 
     /**
@@ -35,12 +33,6 @@ class Auth0 extends Model
      */
     protected $casts = [
         'buyer_id' => 'string',
-        'auth_0_enabled' => 'boolean',
-        'is_active' => 'boolean'
+        'ip_address' => 'string'
     ];
-
-    public function ipAddresses(): HasMany
-    {
-        return $this->hasMany(Auth0IP::class,'buyer_id','buyer_id');
-    }
 }

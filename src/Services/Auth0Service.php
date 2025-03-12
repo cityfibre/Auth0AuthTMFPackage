@@ -42,6 +42,9 @@ class Auth0Service
         if( !$auth0Model->is_active ){
             throw new AuthenticationException("BuyerId: ".$buyerId. " is not active");
         }
+
+        // @Todo validate requesters ip address
+        
         return $request;
     }
 
