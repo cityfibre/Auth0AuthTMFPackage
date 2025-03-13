@@ -17,6 +17,9 @@ class Auth0 extends Model
      */
     protected $table = 'auth0';
 
+    protected $primaryKey = 'buyer_id';
+    public $incrementing = false;
+
     /**
      * The attributes that are mass assignable.
      *
