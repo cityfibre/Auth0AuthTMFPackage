@@ -98,6 +98,10 @@ class Auth0Service
 
     public function getBuyerFromRequest(Request $request): string
     {
+        $this->logger->debug("getBuyerFromRequest");
+        $relatedParties = $request->input('relatedParty', []);
+        $buyer = collect($relatedParties)->firstWhere('role', 'buyer');
+        $this->logger->debug("getBuyerFromRequest first buyer is ".json_encode($buyer));
         return "getFromRequest";
     }
 }
