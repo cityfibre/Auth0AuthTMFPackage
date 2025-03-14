@@ -111,8 +111,8 @@ class Auth0Service
         Validator::make(
             $buyer,
             [
-                'partyOrPartyRole' => 'required|array|min:1',
-                'partyOrPartyRole.*.name' => 'required|string',
+                'partyOrPartyRole' => 'required|array',
+                'partyOrPartyRole.name' => 'required|string',
             ]
         )->validate();
         return $buyer->partyOrPartyRole[0]->name;
