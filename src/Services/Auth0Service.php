@@ -115,6 +115,6 @@ class Auth0Service
                 'partyOrPartyRole.name' => 'required|string',
             ]
         )->validate();
-        return $buyer->partyOrPartyRole[0]->name;
+        return $buyer->partyOrPartyRole->name;
     }
 }
