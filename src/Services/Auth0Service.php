@@ -107,7 +107,6 @@ class Auth0Service
         $this->logger->debug("getBuyerFromRequest");
         $relatedParties = $request->input('relatedParty', []);
         $buyer = collect($relatedParties)->firstWhere('role', 'buyer');
-        $this->logger->debug("getBuyerFromRequest first buyer is ".json_encode($buyer));
         Validator::make(
             $buyer,
             [
@@ -115,6 +114,8 @@ class Auth0Service
                 'partyOrPartyRole.name' => 'required|string',
             ]
         )->validate();
-        return $buyer['partyOrPartyRole']['name'];
+        $buyerId = $buyer['partyOrPartyRole']['name'];
+        $this->logger->debug("getBuyerFromRequest first buyer is ".$buyerId);
+        return $buyerId;
     }
 }
