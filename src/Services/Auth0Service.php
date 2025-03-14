@@ -8,6 +8,8 @@ use cityfibre\auth0authtmfpackage\Models\Auth0IP;
 use cityfibre\auth0authtmfpackage\Repositories\Auth0IPRepository;
 use cityfibre\auth0authtmfpackage\Repositories\Auth0Repository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Psr\Log\LoggerInterface;
 use willfd\auth0middlewarepackage\Exceptions\AuthenticationException;
 
@@ -20,6 +22,7 @@ class Auth0Service
     /**
      * @throws Auth0DataException
      * @throws AuthenticationException
+     * @throws ValidationException
      */
     public function authenticateAgainstAuth0Models(Request $request): Request
     {
@@ -96,12 +99,22 @@ class Auth0Service
         return $auth0Model->refresh();
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function getBuyerFromRequest(Request $request): string
     {
         $this->logger->debug("getBuyerFromRequest");
         $relatedParties = $request->input('relatedParty', []);
         $buyer = collect($relatedParties)->firstWhere('role', 'buyer');
         $this->logger->debug("getBuyerFromRequest first buyer is ".json_encode($buyer));
-        return "getFromRequest";
+        Validator::make(
+            $buyer,
+            [
+                'partyOrPartyRole' => 'required|array|min:1',
+                'partyOrPartyRole.*.name' => 'required|string',
+            ]
+        )->validate();
+        return $buyer->partyOrPartyRole[0]->name;
     }
 }
