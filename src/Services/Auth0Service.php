@@ -53,6 +53,10 @@ class Auth0Service
         }
 
         // @Todo validate requesters ip address
+        $forwardedIp = request()->header('X-Forwarded-For') ?? "";
+        $this->logger->debug("Forwarded IP: ".$forwardedIp);
+        $requestIp = $request->ip() ?? "";
+        $this->logger->debug("Request->IP: ".$requestIp);
         $requestersIp = request()->header('X-Forwarded-For') ?? $request->ip();
         $validIpAddresses = $auth0Model->ipAddresses->pluck('ip_address')->all();
         if( !in_array($requestersIp, $validIpAddresses) ){
