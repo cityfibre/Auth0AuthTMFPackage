@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bc4f66faa46410dd9bbede43112367e2",
+    "content-hash": "582794bb33c1a1725ac0f5f9505c38b3",
     "packages": [
         {
             "name": "auth0/auth0-php",
@@ -6538,11 +6538,17 @@
         },
         {
             "name": "willfd/auth0middlewarepackage",
-            "version": "dev-main",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/willfd/Auth0MiddleWarePackage",
-                "reference": "c089b95150052cbf36b2cc847613cc967e8b4c6d"
+                "url": "https://github.com/willfd/Auth0MiddleWarePackage.git",
+                "reference": "9463c2c24e202aff5444346a2b643636575443b9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/willfd/Auth0MiddleWarePackage/zipball/9463c2c24e202aff5444346a2b643636575443b9",
+                "reference": "9463c2c24e202aff5444346a2b643636575443b9",
+                "shasum": ""
             },
             "require": {
                 "auth0/auth0-php": "^8.13",
@@ -6552,25 +6558,27 @@
                 "mockery/mockery": "^1.6",
                 "phpunit/phpunit": "^10.5"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "willfd\\auth0middlewarepackage\\": "src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Tests\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
             "authors": [
                 {
                     "name": "willfd"
                 }
             ],
             "description": "Laravel Package for Using Auth0 Authentication in the middleware",
-            "time": "2025-03-12T14:26:17+00:00"
+            "support": {
+                "issues": "https://github.com/willfd/Auth0MiddleWarePackage/issues",
+                "source": "https://github.com/willfd/Auth0MiddleWarePackage/tree/1.0.1"
+            },
+            "time": "2025-03-17T16:23:27+00:00"
         }
     ],
     "packages-dev": [
@@ -8335,9 +8343,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "willfd/auth0middlewarepackage": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {},
