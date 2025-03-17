@@ -36,35 +36,34 @@ class Auth0AuthenticateTMFMiddleware
             return $next($request);
         }
         catch(AuthenticationException $e){
-            return new Response(
-                "Authentication Fail - failed authentication",
-                403,
-                $this->errorResponseHeaders
-            );
+            return $this->generateErrorResponse(403, "Authentication Fail - failed authentication", $e->getMessage(), 403);
         } catch (ConfigurationException $e) {
-            return new Response(
-                "Authentication Fail - Config internal ERROR",
-                500,
-                $this->errorResponseHeaders
-            );
+            return $this->generateErrorResponse(500, "Internal ERROR - authentication config error", $e->getMessage(), 500);
         } catch (TokenConfigurationException $e) {
-            return new Response(
-                "Authentication Fail - invalid request",
-                401,
-                $this->errorResponseHeaders
-            );
+            return $this->generateErrorResponse(401, "Authentication Fail - invalid request auth", $e->getMessage(), 401);
         } catch (InvalidTokenException $e) {
-            return new Response(
-                "Authentication Fail - failed Auth0 authentication",
-                403,
-                $this->errorResponseHeaders
-            );
+            return $this->generateErrorResponse(403, "Authentication Fail - failed Auth0 authentication", $e->getMessage(), 403);
         } catch (Auth0DataException $e) {
-            return new Response(
-                "Authentication Fail - BuyerId not found",
-                404,
-                $this->errorResponseHeaders
-            );
+            return $this->generateErrorResponse(404, "Authentication Fail - BuyerId not found", $e->getMessage(), 404);
         }
+    }
+
+    protected function generateErrorResponse(string | int $code, string $reason, ?string $message, int $status): Response
+    {
+        $coreResponseBody = [
+            "@type" => "Error",
+            "code" => $code,
+            "reason" => $reason,
+        ];
+
+        if( !is_null($message) ){
+            $coreResponseBody["message"] = $message;
+        }
+
+        if( $status != $code ){
+            $coreResponseBody["status"] = $status;
+        }
+
+        return new Response($coreResponseBody, $status, $this->errorResponseHeaders);
     }
 }
