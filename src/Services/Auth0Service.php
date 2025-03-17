@@ -15,7 +15,12 @@ use willfd\auth0middlewarepackage\Exceptions\AuthenticationException;
 
 class Auth0Service
 {
-    public function __construct(protected LoggerInterface $logger, protected Auth0Repository $auth0Repository, protected Auth0IPRepository $auth0IPRepository){
+    public function __construct(
+        protected LoggerInterface $logger,
+        protected Auth0Repository $auth0Repository,
+        protected Auth0IPRepository $auth0IPRepository,
+        protected bool $ipAddressWhitelistingEnabled = false
+    ){
         //
     }
 
@@ -52,16 +57,18 @@ class Auth0Service
             throw new AuthenticationException("BuyerId: ".$buyerId. " is not active");
         }
 
-        // @Todo validate requesters ip address
-        $forwardedIp = request()->header('X-Forwarded-For') ?? "";
-        $this->logger->debug("Forwarded IP: ".$forwardedIp);
-        $requestIp = $request->ip() ?? "";
-        $this->logger->debug("Request->IP: ".$requestIp);
-        $requestersIp = request()->header('X-Forwarded-For') ?? $request->ip();
-        $validIpAddresses = $auth0Model->ipAddresses->pluck('ip_address')->all();
-        if( !in_array($requestersIp, $validIpAddresses) ){
-            $this->logger->debug("Auth Failed request from invalid ip: ".$requestersIp." Ip not in whitelist for BuyerId: ".$buyerId, $validIpAddresses);
-            throw new AuthenticationException("Auth Failed request from invalid ip: ".$requestersIp);
+        // ip address validation
+        if( $this->ipAddressWhitelistingEnabled ) {
+            $forwardedIp = request()->header('X-Forwarded-For') ?? "";
+            $this->logger->debug("Forwarded IP: " . $forwardedIp);
+            $requestIp = $request->ip() ?? "";
+            $this->logger->debug("Request->IP: " . $requestIp);
+            $requestersIp = request()->header('X-Forwarded-For') ?? $request->ip();
+            $validIpAddresses = $auth0Model->ipAddresses->pluck('ip_address')->all();
+            if (!in_array($requestersIp, $validIpAddresses)) {
+                $this->logger->debug("Auth Failed request from invalid ip: " . $requestersIp . " Ip not in whitelist for BuyerId: " . $buyerId, $validIpAddresses);
+                throw new AuthenticationException("Auth Failed request from invalid ip: " . $requestersIp);
+            }
         }
 
         return $request;
@@ -75,7 +82,7 @@ class Auth0Service
      * @return Auth0
      */
 
-    public function createUpdateAuth0Model(string $buyerId, bool $auth0Enabled, bool $isActive, array $ipAddresses): Auth0
+    public function createUpdateAuth0Model(string $buyerId, bool $auth0Enabled, bool $isActive, array $ipAddresses = null): Auth0
     {
         $auth0Model = $this->auth0Repository->createUpdate(
             ['buyer_id' => $buyerId],
@@ -86,20 +93,23 @@ class Auth0Service
             ]
         );
 
-        // remove unwanted ip addresses
-        $currentIpAddresses = $auth0Model->ipAddresses;
-        $currentIpAddresses->each(function(Auth0IP $ipAddress) use ($ipAddresses) {
-            if( !in_array($ipAddress->ip_address, $ipAddresses) ){
-                $ipAddress->delete();
-            }
-        });
+        if( $this->ipAddressWhitelistingEnabled){
+            // remove unwanted ip addresses
+            $currentIpAddresses = $auth0Model->ipAddresses;
+            $currentIpAddresses->each(function(Auth0IP $ipAddress) use ($ipAddresses) {
+                if( !in_array($ipAddress->ip_address, $ipAddresses) ){
+                    $ipAddress->delete();
+                }
+            });
 
-        // add missing ip addresses
-        foreach($ipAddresses as $newIPAddress){
-            if( !in_array($newIPAddress, $currentIpAddresses->pluck('ip_address')->all())){
-                $this->auth0IPRepository->create($buyerId, $newIPAddress);
+            // add missing ip addresses
+            foreach($ipAddresses as $newIPAddress){
+                if( !in_array($newIPAddress, $currentIpAddresses->pluck('ip_address')->all())){
+                    $this->auth0IPRepository->create($buyerId, $newIPAddress);
+                }
             }
         }
+
         return $auth0Model->refresh();
     }
 
