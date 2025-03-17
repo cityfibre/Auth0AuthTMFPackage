@@ -35,8 +35,6 @@ class Auth0AuthTMFPackageServiceProvider extends ServiceProvider
             __DIR__.'/../database/migrations' => database_path('migrations'),
         ]);
 
-        Log::debug('config', ['domain' => config('Auth0AuthTMFMiddleware.domain')]);
-
     }
 
     /**
