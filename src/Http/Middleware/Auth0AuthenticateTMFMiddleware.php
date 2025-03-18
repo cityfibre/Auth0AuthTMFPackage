@@ -36,13 +36,13 @@ class Auth0AuthenticateTMFMiddleware
             return $next($request);
         }
         catch(AuthenticationException $e){
-            return $this->generateErrorResponse(403, "Authentication Fail - failed authentication", $e->getMessage(), 403);
+            return $this->generateErrorResponse(403, "Authentication Fail - Failed authentication", $e->getMessage(), 403);
         } catch (ConfigurationException $e) {
-            return $this->generateErrorResponse(500, "Internal ERROR - authentication config error", $e->getMessage(), 500);
+            return $this->generateErrorResponse(500, "Internal ERROR - Authentication configuration error", $e->getMessage(), 500);
         } catch (TokenConfigurationException $e) {
-            return $this->generateErrorResponse(401, "Authentication Fail - invalid request auth", $e->getMessage(), 401);
+            return $this->generateErrorResponse(401, "Authentication Fail - Invalid Request", $e->getMessage(), 401);
         } catch (InvalidTokenException $e) {
-            return $this->generateErrorResponse(403, "Authentication Fail - failed Auth0 authentication", $e->getMessage(), 403);
+            return $this->generateErrorResponse(403, "Authentication Fail - Failed Auth0 Authentication", $e->getMessage(), 403);
         } catch (Auth0DataException $e) {
             return $this->generateErrorResponse(404, "Authentication Fail - BuyerId not found", $e->getMessage(), 404);
         }
