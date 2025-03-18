@@ -31,8 +31,6 @@ class Auth0Service
      */
     public function authenticateAgainstAuth0Models(Request $request): Request
     {
-        $this->logger->debug("authenticateAgainstAuth0Models hit");
-
         // @Todo get buyer from either token or request if no buyerId as admin
         $buyerId = $request->attributes->get('tokenBuyerId');
         if( is_null($buyerId) ){
