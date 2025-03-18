@@ -36,6 +36,7 @@ class Auth0Service
         if( is_null($buyerId) ){
             // @Todo get from request
             $buyerId = $this->getBuyerFromRequest($request);
+            $request->attributes->set('tokenBuyerId', $buyerId);
         }
         // @Todo get Auth0Model from buyerId
         $auth0Model = $this->auth0Repository->getByBuyerId($buyerId);
