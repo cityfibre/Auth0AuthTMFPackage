@@ -21,6 +21,15 @@ Add package requirement
 ```
 
 ### App Config
+#### Add Provider
+In boostrap/providers.php, add the packages provider class.
+```php
+use cityfibre\auth0authtmfpackage\Auth0AuthTMFPackageServiceProvider;
+...
+return [
+    Auth0AuthTMFPackageServiceProvider::class
+];
+```
 #### create config file and migrations for package
 run this command, and search "cityfibre" to add both the middleware config and the migrations from the package. The migrations shall be refactored with the timestamp this command is executed.
 ```bash
@@ -39,16 +48,6 @@ AUTH0_ADMIN_SCOPES=    STRING COMMA SEPERATED   ie admin:app-example
 #### Run migrations
 ```bash
 php artisan migrate
-```
-
-### Add Provider
-In boostrap/providers.php, add the packages provider class
-```php
-use cityfibre\auth0authtmfpackage\Auth0AuthTMFPackageServiceProvider;
-...
-return [
-    Auth0AuthTMFPackageServiceProvider::class
-];
 ```
 
 #### Set Middleware Alias (optional)
