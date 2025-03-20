@@ -80,7 +80,6 @@ namespace App\Models;
 use cityfibre\auth0authtmfpackage\Models\Auth0;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class AccountAuth0 extends Model
