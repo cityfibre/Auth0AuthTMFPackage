@@ -33,11 +33,20 @@ class Auth0Service
     {
         // @Todo get buyer from either token or request if no buyerId as admin
         $buyerId = $request->attributes->get('tokenBuyerId');
-        if( is_null($buyerId) ){
+        $isAdmin = $request->attributes->get('isAdmin');
+
+        $buyerFromRequest = $this->getBuyerFromRequest($request);
+        if( $isAdmin){
             // @Todo get from request
-            $buyerId = $this->getBuyerFromRequest($request);
+            $buyerId = $buyerFromRequest;
             $request->attributes->set('tokenBuyerId', $buyerId);
         }
+
+        if($buyerId != $buyerFromRequest){
+            $this->logger->debug("Buyer Id in token does not match Buyer Id in request");
+            throw new AuthenticationException("Invalid BuyerId: ".$buyerId." does not match ".$buyerFromRequest." from request");
+        }
+
         // @Todo get Auth0Model from buyerId
         $auth0Model = $this->auth0Repository->getByBuyerId($buyerId);
 

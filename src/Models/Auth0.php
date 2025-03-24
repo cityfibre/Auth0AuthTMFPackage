@@ -2,6 +2,7 @@
 
 namespace cityfibre\auth0authtmfpackage\Models;
 
+use Database\Factories\Auth0Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -41,6 +42,11 @@ class Auth0 extends Model
         'auth_0_enabled' => 'boolean',
         'is_active' => 'boolean'
     ];
+
+    static function newFactory(): Auth0Factory
+    {
+        return new Auth0Factory();
+    }
 
     public function ipAddresses(): HasMany
     {
