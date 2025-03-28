@@ -35,51 +35,61 @@ class Auth0Service
         $buyerId = $request->attributes->get('tokenBuyerId');
         $isAdmin = $request->attributes->get('isAdmin');
 
-        $buyerFromRequest = $this->getBuyerFromRequest($request);
-        if( $isAdmin){
-            // @Todo get from request
-            $buyerId = $buyerFromRequest;
-            $request->attributes->set('tokenBuyerId', $buyerId);
-        }
+        if ($request->method() !== 'GET') {
+            $buyerFromRequest = $this->getBuyerFromRequest($request);
 
-        if($buyerId != $buyerFromRequest){
-            $this->logger->debug("Buyer Id in token does not match Buyer Id in request");
-            throw new AuthenticationException("Invalid BuyerId: ".$buyerId." does not match ".$buyerFromRequest." from request");
-        }
+            if( $isAdmin){
+                // @Todo get from request
+                $buyerId = $buyerFromRequest;
+                $request->attributes->set('tokenBuyerId', $buyerId);
+            }
 
-        // @Todo get Auth0Model from buyerId
-        $auth0Model = $this->auth0Repository->getByBuyerId($buyerId);
-
-        if( is_null($auth0Model) ){
-            $this->logger->debug("No Auth0 Data for given BuyerId: ".$buyerId);
-            throw new Auth0DataException("No Auth0 Data for given BuyerId: ".$buyerId);
-        }
-        // @Todo check if auth0 enabled for model
-        if( !$auth0Model->auth_0_enabled ){
-            $this->logger->debug("Auth0 Disabled for given BuyerId: ".$buyerId);
-            throw new AuthenticationException("Auth0 Disabled for given BuyerId: ".$buyerId);
-        }
-        // @todo check if model active
-        if( !$auth0Model->is_active ){
-            $this->logger->debug("BuyerId: ".$buyerId. " is not active");
-            throw new AuthenticationException("BuyerId: ".$buyerId. " is not active");
-        }
-
-        // ip address validation
-        if( $this->ipAddressWhitelistingEnabled ) {
-            $forwardedIp = request()->header('X-Forwarded-For') ?? "";
-            $this->logger->debug("Forwarded IP: " . $forwardedIp);
-            $requestIp = $request->ip() ?? "";
-            $this->logger->debug("Request->IP: " . $requestIp);
-            $requestersIp = request()->header('X-Forwarded-For') ?? $request->ip();
-            $validIpAddresses = $auth0Model->ipAddresses->pluck('ip_address')->all();
-            if (!in_array($requestersIp, $validIpAddresses)) {
-                $this->logger->debug("Auth Failed request from invalid ip: " . $requestersIp . " Ip not in whitelist for BuyerId: " . $buyerId, $validIpAddresses);
-                throw new AuthenticationException("Auth Failed request from invalid ip: " . $requestersIp);
+            if($buyerId != $buyerFromRequest){
+                $this->logger->debug("Buyer Id in token does not match Buyer Id in request");
+                throw new AuthenticationException("Invalid BuyerId: ".$buyerId." does not match ".$buyerFromRequest." from request");
             }
         }
 
+        if ($isAdmin === false) {
+            if ($buyerId === null) {
+                throw new AuthenticationException("Invalid Token No BuyerId provided for Non Admin");
+            }
+
+            $auth0Model = $this->auth0Repository->getByBuyerId($buyerId);
+
+            if( is_null($auth0Model) ){
+                $this->logger->debug("No Auth0 Data for given BuyerId: ".$buyerId);
+                throw new Auth0DataException("No Auth0 Data for given BuyerId: ".$buyerId);
+            }
+            // Check if auth0 enabled for model.
+            if( !$auth0Model->auth_0_enabled ){
+                $this->logger->debug("Auth0 Disabled for given BuyerId: ".$buyerId);
+                throw new AuthenticationException("Auth0 Disabled for given BuyerId: ".$buyerId);
+            }
+            // Check if model active.
+            if( !$auth0Model->is_active ){
+                $this->logger->debug("BuyerId: ".$buyerId. " is not active");
+                throw new AuthenticationException("BuyerId: ".$buyerId. " is not active");
+            }
+
+            // Ip address validation.
+            if( $this->ipAddressWhitelistingEnabled ) {
+                $forwardedIp = request()->header('X-Forwarded-For') ?? "";
+                $this->logger->debug("Forwarded IP: " . $forwardedIp);
+                $requestIp = $request->ip() ?? "";
+                $this->logger->debug("Request->IP: " . $requestIp);
+                $requestersIp = request()->header('X-Forwarded-For') ?? $request->ip();
+                $validIpAddresses = $auth0Model->ipAddresses->pluck('ip_address')->all();
+                if (!in_array($requestersIp, $validIpAddresses)) {
+                    $this->logger->debug("Auth Failed request from invalid ip: " . $requestersIp . " Ip not in whitelist for BuyerId: " . $buyerId, $validIpAddresses);
+                    throw new AuthenticationException("Auth Failed request from invalid ip: " . $requestersIp);
+                }
+            }
+
+        }
+
         return $request;
+
     }
 
     /**
